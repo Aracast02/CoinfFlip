@@ -9,22 +9,27 @@ import SpriteKit
 
 class CoinFlipScene: SKScene {
     let coin = SKSpriteNode(imageNamed: "coin_heads") // Imagen de la moneda
+    var gameLogic = GameLogic()
 
+    // Nuevo inicializador
+    init(gameLogic: GameLogic) {
+        self.gameLogic = gameLogic
+        super.init(size: CGSize(width: 400, height: 600))
+        self.scaleMode = .aspectFill
+    }
+
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func didMove(to view: SKView) {
-        // Establecer el fondo como una imagen
-               let background = SKSpriteNode(imageNamed: "background") // Asegúrate de tener esta imagen en tu Assets
-               background.position = CGPoint(x: size.width / 2, y: size.height / 2)
-               background.size = size
-               background.zPosition = -1 // Asegura que esté detrás de la moneda
-               addChild(background)
         
-        //Mantener score
-        
+        self.backgroundColor = .clear
         
         // Configurar la moneda
         coin.position = CGPoint(x: size.width / 2, y: size.height / 3)
         coin.setScale(0.5)
-        let coinSize = min(size.width, size.height) * 0.4 // 20% del tamaño de la pantalla
+        let coinSize = min(size.width, size.height) * 0.6 // 60% del tamaño de la pantalla
         coin.size = CGSize(width: coinSize, height: coinSize)
         addChild(coin)
 
@@ -34,7 +39,7 @@ class CoinFlipScene: SKScene {
     }
 
     @objc func flipCoin() {
-        let isHeads = Bool.random() // Genera cara o cruz aleatoriamente
+        let isHeads = gameLogic.flipCoin() // Genera cara o cruz aleatoriamente
         let texture = SKTexture(imageNamed: isHeads ? "coin_heads" : "coin_tails")
 
         let flipAnimation = SKAction.sequence([
